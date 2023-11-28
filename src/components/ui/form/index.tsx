@@ -1,10 +1,12 @@
-import { Input } from '@nextui-org/react'
+import { Input, cn } from '@nextui-org/react'
 import {
   createContext,
   forwardRef,
   useContext,
+  useId,
   type ComponentPropsWithoutRef,
   type ElementRef,
+  type HTMLAttributes,
 } from 'react'
 import {
   Controller,
@@ -47,6 +49,19 @@ const FormItemContext = createContext<FormItemContextValue>(
   {} as FormItemContextValue,
 )
 
+const FormItem = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    const id = useId()
+
+    return (
+      <FormItemContext.Provider value={{ id }}>
+        <div ref={ref} className={cn('space-y-2', className)} {...props} />
+      </FormItemContext.Provider>
+    )
+  },
+)
+FormItem.displayName = 'FormItem'
+
 const FormInput = forwardRef<
   ElementRef<typeof Input>,
   ComponentPropsWithoutRef<typeof Input>
@@ -70,7 +85,7 @@ const FormInput = forwardRef<
           : `${formDescriptionId} ${formMessageId}`
       }
       aria-invalid={!!error}
-      errorMessage={error?.message && isTouched}
+      errorMessage={error?.message}
       isInvalid={error && isTouched}
       name={name}
       {...props}
@@ -97,4 +112,4 @@ const useFormField = () => {
   }
 }
 
-export { Form, FormField, FormInput, useFormField }
+export { Form, FormField, FormInput, FormItem, useFormField }
