@@ -31,6 +31,7 @@
   "include": [
     ".eslintrc.cjs",
     "next-env.d.ts",
+    "resources.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "**/*.cjs",
@@ -40,4 +41,3 @@
   ],
   "exclude": ["node_modules"]
 }
-

@@ -11,5 +11,6 @@ const config = {
   localePath: path.resolve('./public/locales'),
   localeStructure: '{{lng}}/{{ns}}',
   defaultNS: 'common',
+  nsSeparator: ':',
 }
 export default config

@@ -1,6 +1,7 @@
 import { Form, FormField, FormInput, FormItem } from '@/components/ui/form'
 import AuthLayout from '@/layouts/auth'
 import { type NextPageWithLayout } from '@/pages/_app'
+import { LINK_AUTH } from '@/utils/constants/links'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
@@ -12,6 +13,7 @@ import {
   Link,
   cn,
 } from '@nextui-org/react'
+import { capitalize } from 'lodash-es'
 import { useTranslation } from 'next-i18next'
 import config from 'next-i18next.config.mjs'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -20,24 +22,38 @@ import { z } from 'zod'
 export async function getServerSideProps({ locale }: { locale: string }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ['common'], config)),
+      ...(await serverSideTranslations(locale, ['common', 'auth'], config)),
     },
   }
 }
 
 const SignUpScreen: NextPageWithLayout = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation(['common', 'auth'])
   // ==================== React Hook Form ====================
   const signUpSchema = z.object({
-    username: z.string().min(1, { message: t('Username is required') }),
-    email: z.string().min(1, { message: t('Email is required') }),
+    username: z
+      .string()
+      .min(1, {
+        message: capitalize(t('auth:validation.username.isRequired')),
+      }),
+    email: z
+      .string()
+      .min(1, { message: capitalize(t('auth:validation.email.isRequired')) }),
     password: z
       .string()
       .min(6, {
-        message: t('Password must be at least 6 characters long'),
+        message: capitalize(
+          t('auth:validation.password.min', {
+            min: 6,
+          }),
+        ),
       })
       .max(20, {
-        message: t('Password must be less than 20 characters long'),
+        message: capitalize(
+          t('auth:validation.password.max', {
+            max: 20,
+          }),
+        ),
       }),
   })
   const rhf = useForm<z.infer<typeof signUpSchema>>({
@@ -55,9 +71,11 @@ const SignUpScreen: NextPageWithLayout = () => {
   }
 
   return (
-    <Card className='w-full animate-appearance-in sm:w-1/3'>
+    <Card className='w-full animate-appearance-in sm:w-1/2 lg:w-1/3'>
       <CardHeader className='flex gap-2'>
-        <h3 className='text-2xl font-semibold'>{t('Sign up')}</h3>
+        <h3 className='text-2xl font-semibold'>
+          {capitalize(t('common:sign-up'))}
+        </h3>
       </CardHeader>
       <Divider />
       <CardBody>
@@ -74,8 +92,8 @@ const SignUpScreen: NextPageWithLayout = () => {
                     variant='flat'
                     isRequired
                     isClearable
-                    placeholder={t('Your username')}
-                    label={'Email'}
+                    placeholder={capitalize(t('auth:field.your-username'))}
+                    label={'Username'}
                     onClear={() => field.onChange('')}
                     autoComplete={'off'}
                   />
@@ -93,7 +111,7 @@ const SignUpScreen: NextPageWithLayout = () => {
                     variant='flat'
                     isRequired
                     isClearable
-                    placeholder={t('Your email')}
+                    placeholder={capitalize(t('auth:field.your-email'))}
                     label={'Email'}
                     onClear={() => field.onChange('')}
                     autoComplete={'off'}
@@ -113,7 +131,7 @@ const SignUpScreen: NextPageWithLayout = () => {
                     isRequired
                     isClearable
                     label={'Password'}
-                    placeholder={t('Your password')}
+                    placeholder={capitalize(t('auth:field.your-password'))}
                     onClear={() => field.onChange('')}
                   />
                 </FormItem>
@@ -128,16 +146,17 @@ const SignUpScreen: NextPageWithLayout = () => {
           color='secondary'
           variant='flat'
           className='font-bold'
+          fullWidth
         >
-          {t('Submit')}
+          {capitalize(t('common:submit'))}
         </Button>
         <Divider orientation='horizontal' />
         <div className='flex justify-center'>
           <span className='text-muted-foreground px-2 text-xs'>
-            {t('Already has an account')} ?
+            {capitalize(t('auth:have-account'))} ?
           </span>
-          <Link href='/auth/login' underline='hover' className=' text-xs'>
-            {cn(t('Login'), t('now'))}
+          <Link href={LINK_AUTH.LOGIN} underline='hover' className='text-xs'>
+            {cn(capitalize(t('common:login')), t('common:now'))}
           </Link>
         </div>
       </CardFooter>
