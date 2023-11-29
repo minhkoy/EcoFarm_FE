@@ -3,6 +3,7 @@
  * for Docker builds.
  */
 await import('./src/env.js')
+import i18Config from './next-i18next.config.mjs'
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -22,10 +23,7 @@ const config = {
       },
     ]
   },
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'vi'],
-  },
+  i18n: i18Config.i18n,
 }
 
 export default config
