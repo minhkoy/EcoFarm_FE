@@ -8,7 +8,6 @@
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
-
     /* Strictness */
     "strict": true,
     "noUncheckedIndexedAccess": true,
@@ -35,8 +34,10 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.cjs",
+    "**/*.mjs",
     "**/*.js",
     ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
+
