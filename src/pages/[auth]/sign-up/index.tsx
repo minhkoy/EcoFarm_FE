@@ -75,7 +75,7 @@ const SignUpScreen: NextPageWithLayout = () => {
                     isRequired
                     isClearable
                     placeholder={t('Your username')}
-                    label={'Email'}
+                    label={'Username'}
                     onClear={() => field.onChange('')}
                     autoComplete={'off'}
                   />
