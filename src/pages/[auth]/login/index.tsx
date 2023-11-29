@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/form'
 import AuthLayout from '@/layouts/auth'
 import { type NextPageWithLayout } from '@/pages/_app'
+import { LINK_AUTH } from '@/utils/constants/links'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
@@ -18,6 +19,7 @@ import {
   Link,
   cn,
 } from '@nextui-org/react'
+import { capitalize } from 'lodash-es'
 import { useTranslation } from 'next-i18next'
 import config from 'next-i18next.config.mjs'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -27,23 +29,33 @@ import { z } from 'zod'
 export async function getServerSideProps({ locale }: { locale: string }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ['common'], config)),
+      ...(await serverSideTranslations(locale, ['common', 'auth'], config)),
     },
   }
 }
 
 const LoginScreen: NextPageWithLayout = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation(['common', 'auth'])
   // ==================== React Hook Form ====================
   const schema = z.object({
-    email: z.string().min(1, { message: t('Email is required') }),
+    email: z.string().min(1, {
+      message: capitalize(t('auth:validation.email.isRequired')),
+    }),
     password: z
       .string()
       .min(6, {
-        message: t('Password must be at least 6 characters long'),
+        message: capitalize(
+          t('auth:validation.password.min', {
+            min: 6,
+          }),
+        ),
       })
       .max(20, {
-        message: t('Password must be less than 20 characters long'),
+        message: capitalize(
+          t('auth:validation.password.max', {
+            max: 20,
+          }),
+        ),
       }),
     isRemember: z.boolean().optional().default(false),
   })
@@ -62,9 +74,11 @@ const LoginScreen: NextPageWithLayout = () => {
   }
 
   return (
-    <Card className='w-full animate-appearance-in sm:w-1/3'>
+    <Card className='w-full animate-appearance-in sm:w-1/2 lg:w-1/3'>
       <CardHeader className='flex gap-2'>
-        <h3 className='text-2xl font-semibold'>{t('Welcome to Eco Farm')}</h3>
+        <h3 className='text-2xl font-semibold uppercase'>
+          {capitalize(t('common:login'))}
+        </h3>
       </CardHeader>
       <Divider />
       <CardBody>
@@ -81,7 +95,11 @@ const LoginScreen: NextPageWithLayout = () => {
                     variant='flat'
                     isRequired
                     isClearable
-                    placeholder={t('Your user or email account')}
+                    placeholder={cn(
+                      capitalize(t('common:username')),
+                      t('common:or'),
+                      t('auth:field.your-email'),
+                    )}
                     label={'Email'}
                     onClear={() => field.onChange('')}
                     autoComplete={'off'}
@@ -101,7 +119,7 @@ const LoginScreen: NextPageWithLayout = () => {
                     isRequired
                     isClearable
                     label={'Password'}
-                    placeholder={t('Your password')}
+                    placeholder={capitalize(t('auth:field.your-password'))}
                     onClear={() => field.onChange('')}
                   />
                 </FormItem>
@@ -112,8 +130,8 @@ const LoginScreen: NextPageWithLayout = () => {
               name='isRemember'
               render={({ field }) => (
                 <FormItem>
-                  <FormCheckBox {...field} color={'secondary'}>
-                    {t('Remember me')}
+                  <FormCheckBox {...field} color={'secondary'} size={'sm'}>
+                    {capitalize(t('auth:field.remember-me'))}
                   </FormCheckBox>
                 </FormItem>
               )}
@@ -126,17 +144,18 @@ const LoginScreen: NextPageWithLayout = () => {
           onClick={form.handleSubmit(onSubmit)}
           color='secondary'
           variant='flat'
+          fullWidth
           className='font-bold'
         >
-          {t('Submit')}
+          {capitalize(t('common:submit'))}
         </Button>
         <Divider orientation='horizontal' />
         <div className='flex justify-center'>
           <span className='text-muted-foreground px-2 text-xs'>
-            {t("Don't have an account")} ?
+            {capitalize(t('auth:not-have-account'))} ?
           </span>
-          <Link href='/auth/sign-up' underline='hover' className=' text-xs'>
-            {cn(t('Sign up'), t('now'))}
+          <Link href={LINK_AUTH.SIGN_UP} underline='hover' className=' text-xs'>
+            {cn(capitalize(t('common:sign-up')), t('common:now'))}
           </Link>
         </div>
       </CardFooter>

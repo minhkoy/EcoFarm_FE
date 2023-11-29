@@ -1,18 +1,8 @@
 {
-  "Already has an account": "Đã có tài khoản",
-  "Don't have an account": "Chưa có tài khoản",
-  "Email is required": "Email là bắt buộc",
-  "Login": "Đăng nhập",
+  "login": "đăng nhập",
   "now": "ngay",
-  "Password must be at least 6 characters long": "Mật khẩu phải có ít nhất 6 ký tự",
-  "Password must be less than 20 characters long": "Mật khẩu phải ít hơn 20 ký tự",
-  "Remember me": "Lưu nhớ đăng nhập",
-  "Sign up": "Đăng ký",
-  "Submit": "Gửi",
-  "Username is required": "Tên tài khoản là bắt buộc",
-  "Welcome to Eco Farm": "Chào mừng bạn đến với Eco Farm",
-  "Your email": "Tài khoản email của bạn",
-  "Your password": "Mật khẩu của bạn",
-  "Your user or email account": "Tên đăng nhập hoặc email của bạn",
-  "Your username": "Tài khoản của bạn"
+  "or": "hoặc",
+  "sign-up": "đăng ký",
+  "submit": "gửi",
+  "username": "username"
 }
