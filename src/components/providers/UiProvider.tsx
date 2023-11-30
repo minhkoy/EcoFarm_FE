@@ -7,7 +7,12 @@ export default function UiProvider({ children }: { children: ReactNode }) {
   const navigate = useRouter()
   return (
     <NextUIProvider navigate={navigate.push}>
-      <ThemeProvider attribute='class' storageKey='eco-farm-theme'>
+      <ThemeProvider
+        attribute='class'
+        storageKey='eco-farm-theme'
+        enableColorScheme
+        enableSystem
+      >
         {children}
       </ThemeProvider>
     </NextUIProvider>
