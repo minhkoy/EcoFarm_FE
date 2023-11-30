@@ -20,14 +20,41 @@ export default {
     nextui({
       prefix: 'eco-farm-ui',
       layout: {
+        fontSize: {
+          tiny: '11px',
+          small: '13px',
+          medium: '14px',
+          large: '24px',
+        },
         radius: {
           small: '0.25rem',
           medium: '0.75rem',
           large: '1.25rem',
         },
       },
-      addCommonColors: true,
+      themes: {
+        light: {
+          colors: {
+            primary: {
+              DEFAULT: '#44A093',
+            },
+            secondary: {
+              DEFAULT: '#ACC981',
+            },
+          },
+        },
+        dark: {
+          colors: {
+            primary: {
+              DEFAULT: '#44A093',
+            },
+            secondary: {
+              DEFAULT: '#ACC981',
+            },
+          },
+        },
+      },
+      addCommonColors: false,
     }),
   ],
 } satisfies Config
-

@@ -5,11 +5,9 @@ import { LINK_AUTH } from '@/utils/constants/links'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
-  Card,
   CardBody,
   CardFooter,
   CardHeader,
-  Divider,
   Link,
   cn,
 } from '@nextui-org/react'
@@ -17,6 +15,7 @@ import { capitalize } from 'lodash-es'
 import { useTranslation } from 'next-i18next'
 import config from 'next-i18next.config.mjs'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 export async function getServerSideProps({ locale }: { locale: string }) {
@@ -30,32 +29,51 @@ export async function getServerSideProps({ locale }: { locale: string }) {
 const SignUpScreen: NextPageWithLayout = () => {
   const { t } = useTranslation(['common', 'auth'])
   // ==================== React Hook Form ====================
-  const signUpSchema = z.object({
-    username: z
-      .string()
-      .min(1, {
+  const signUpSchema = z
+    .object({
+      username: z.string().min(1, {
         message: capitalize(t('auth:validation.username.isRequired')),
       }),
-    email: z
-      .string()
-      .min(1, { message: capitalize(t('auth:validation.email.isRequired')) }),
-    password: z
-      .string()
-      .min(6, {
-        message: capitalize(
-          t('auth:validation.password.min', {
-            min: 6,
-          }),
-        ),
-      })
-      .max(20, {
-        message: capitalize(
-          t('auth:validation.password.max', {
-            max: 20,
-          }),
-        ),
-      }),
-  })
+      email: z
+        .string()
+        .min(1, { message: capitalize(t('auth:validation.email.isRequired')) }),
+      password: z
+        .string()
+        .min(6, {
+          message: capitalize(
+            t('auth:validation.password.min', {
+              min: 6,
+            }),
+          ),
+        })
+        .max(20, {
+          message: capitalize(
+            t('auth:validation.password.max', {
+              max: 20,
+            }),
+          ),
+        }),
+      confirmPassword: z
+        .string()
+        .min(6, {
+          message: capitalize(
+            t('auth:validation.password.min', {
+              min: 6,
+            }),
+          ),
+        })
+        .max(20, {
+          message: capitalize(
+            t('auth:validation.password.max', {
+              max: 20,
+            }),
+          ),
+        }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: capitalize(t('auth:validation.password.notMatch')),
+      path: ['confirmPassword'],
+    })
   const rhf = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     mode: 'all',
@@ -63,6 +81,7 @@ const SignUpScreen: NextPageWithLayout = () => {
       email: '',
       password: '',
       username: '',
+      confirmPassword: '',
     },
   })
 
@@ -71,13 +90,15 @@ const SignUpScreen: NextPageWithLayout = () => {
   }
 
   return (
-    <Card className='w-full animate-appearance-in sm:w-1/2 lg:w-1/3'>
-      <CardHeader className='flex gap-2'>
-        <h3 className='text-2xl font-semibold'>
-          {capitalize(t('common:sign-up'))}
-        </h3>
+    <>
+      <CardHeader className='flex h-1/3 items-center justify-center gap-2 sm:h-fit'>
+        <Image
+          src='/assets/brands/EcoFarm.svg'
+          alt='logo'
+          width={150}
+          height={150}
+        />
       </CardHeader>
-      <Divider />
       <CardBody>
         <Form {...rhf}>
           <form onSubmit={rhf.handleSubmit(onSubmit)} className='space-y-8'>
@@ -92,8 +113,7 @@ const SignUpScreen: NextPageWithLayout = () => {
                     variant='flat'
                     isRequired
                     isClearable
-                    placeholder={capitalize(t('auth:field.your-username'))}
-                    label={'Username'}
+                    label={capitalize(t('auth:field.your-username'))}
                     onClear={() => field.onChange('')}
                     autoComplete={'off'}
                   />
@@ -111,8 +131,7 @@ const SignUpScreen: NextPageWithLayout = () => {
                     variant='flat'
                     isRequired
                     isClearable
-                    placeholder={capitalize(t('auth:field.your-email'))}
-                    label={'Email'}
+                    label={capitalize(t('auth:field.your-email'))}
                     onClear={() => field.onChange('')}
                     autoComplete={'off'}
                   />
@@ -130,8 +149,24 @@ const SignUpScreen: NextPageWithLayout = () => {
                     variant='flat'
                     isRequired
                     isClearable
-                    label={'Password'}
-                    placeholder={capitalize(t('auth:field.your-password'))}
+                    label={capitalize(t('auth:field.your-password'))}
+                    onClear={() => field.onChange('')}
+                  />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={rhf.control}
+              name='confirmPassword'
+              render={({ field }) => (
+                <FormItem>
+                  <FormInput
+                    {...field}
+                    type='password'
+                    variant='flat'
+                    isRequired
+                    isClearable
+                    label={capitalize(t('auth:field.confirm-password'))}
                     onClear={() => field.onChange('')}
                   />
                 </FormItem>
@@ -143,25 +178,25 @@ const SignUpScreen: NextPageWithLayout = () => {
       <CardFooter className='flex-col gap-3'>
         <Button
           onClick={rhf.handleSubmit(onSubmit)}
-          color='secondary'
-          variant='flat'
+          color='primary'
+          variant='solid'
           className='font-bold'
           fullWidth
         >
-          {capitalize(t('common:submit'))}
+          {capitalize(t('common:sign-up'))}
         </Button>
-        <Divider orientation='horizontal' />
+
         <div className='flex justify-center'>
-          <span className='text-muted-foreground px-2 text-xs'>
+          <span className='text-muted-foreground px-2 '>
             {capitalize(t('auth:have-account'))} ?
           </span>
-          <Link href={LINK_AUTH.LOGIN} underline='hover' className='text-xs'>
+          <Link href={LINK_AUTH.LOGIN} underline='hover' className=''>
             {cn(capitalize(t('common:login')), t('common:now'))}
           </Link>
         </div>
       </CardFooter>
       {/* <DevT i18nIsDynamicList placement='bottom-left' control={rhf.control} /> */}
-    </Card>
+    </>
   )
 }
 

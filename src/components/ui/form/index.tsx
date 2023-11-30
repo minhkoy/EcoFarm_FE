@@ -120,6 +120,7 @@ const FormCheckBox = forwardRef<
       errorMessage={error?.message}
       isInvalid={error && isTouched}
       name={name}
+      radius='sm'
       {...props}
     >
       {props.children}

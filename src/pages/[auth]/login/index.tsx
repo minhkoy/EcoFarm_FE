@@ -11,11 +11,9 @@ import { LINK_AUTH } from '@/utils/constants/links'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
-  Card,
   CardBody,
   CardFooter,
   CardHeader,
-  Divider,
   Link,
   cn,
 } from '@nextui-org/react'
@@ -23,6 +21,7 @@ import { capitalize } from 'lodash-es'
 import { useTranslation } from 'next-i18next'
 import config from 'next-i18next.config.mjs'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -74,14 +73,25 @@ const LoginScreen: NextPageWithLayout = () => {
   }
 
   return (
-    <Card className='w-full animate-appearance-in sm:w-1/2 lg:w-1/3'>
-      <CardHeader className='flex gap-2'>
-        <h3 className='text-2xl font-semibold uppercase'>
-          {capitalize(t('common:login'))}
+    <>
+      <CardHeader className='flex h-1/3 flex-col items-center justify-center gap-5 sm:h-fit '>
+        <h3 className='text-center text-3xl font-bold leading-8 text-secondary sm:leading-relaxed'>
+          {cn(
+            capitalize(t('common:experience')),
+            t('common:and'),
+            t('common:explore'),
+          )}
+          <br />
+          Eco Farm
         </h3>
+        <Image
+          src='/assets/brands/EcoFarm.svg'
+          alt='logo'
+          width={150}
+          height={150}
+        />
       </CardHeader>
-      <Divider />
-      <CardBody>
+      <CardBody className='justify-center'>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
             <FormField
@@ -95,12 +105,11 @@ const LoginScreen: NextPageWithLayout = () => {
                     variant='flat'
                     isRequired
                     isClearable
-                    placeholder={cn(
+                    label={cn(
                       capitalize(t('common:username')),
                       t('common:or'),
                       t('auth:field.your-email'),
                     )}
-                    label={'Email'}
                     onClear={() => field.onChange('')}
                     autoComplete={'off'}
                   />
@@ -118,48 +127,51 @@ const LoginScreen: NextPageWithLayout = () => {
                     variant='flat'
                     isRequired
                     isClearable
-                    label={'Password'}
-                    placeholder={capitalize(t('auth:field.your-password'))}
+                    label={capitalize(t('auth:field.your-password'))}
                     onClear={() => field.onChange('')}
                   />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name='isRemember'
-              render={({ field }) => (
-                <FormItem>
-                  <FormCheckBox {...field} color={'secondary'} size={'sm'}>
-                    {capitalize(t('auth:field.remember-me'))}
-                  </FormCheckBox>
-                </FormItem>
-              )}
-            />
+            <div className='flex justify-between'>
+              <FormField
+                control={form.control}
+                name='isRemember'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormCheckBox {...field} color={'primary'}>
+                      {capitalize(t('auth:field.remember-me'))}
+                    </FormCheckBox>
+                  </FormItem>
+                )}
+              />
+              <Link href={LINK_AUTH.FORGOT_PASSWORD} className='text-primary'>
+                {capitalize(t('auth:field.forgot-password'))} ?
+              </Link>
+            </div>
           </form>
         </Form>
       </CardBody>
       <CardFooter className='flex-col gap-3'>
         <Button
           onClick={form.handleSubmit(onSubmit)}
-          color='secondary'
-          variant='flat'
+          color='primary'
+          variant='solid'
           fullWidth
           className='font-bold'
         >
-          {capitalize(t('common:submit'))}
+          {capitalize(t('common:login'))}
         </Button>
-        <Divider orientation='horizontal' />
         <div className='flex justify-center'>
-          <span className='text-muted-foreground px-2 text-xs'>
+          <span className='text-muted-foreground px-2 '>
             {capitalize(t('auth:not-have-account'))} ?
           </span>
-          <Link href={LINK_AUTH.SIGN_UP} underline='hover' className=' text-xs'>
+          <Link href={LINK_AUTH.SIGN_UP} underline='hover' className=' '>
             {cn(capitalize(t('common:sign-up')), t('common:now'))}
           </Link>
         </div>
       </CardFooter>
-    </Card>
+    </>
   )
 }
 LoginScreen.getLayout = function getLayout(page) {
