@@ -1,4 +1,4 @@
-import nextFonts from '@/config/lib/fonts'
+import { nextFonts } from '@/config/lib/fonts'
 import { cn } from '@nextui-org/react'
 import { type PropsWithChildren } from 'react'
 import ReactQueryProvider from './ReactQueryProvider'

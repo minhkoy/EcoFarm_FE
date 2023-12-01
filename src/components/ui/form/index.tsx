@@ -1,4 +1,10 @@
-import { Checkbox, Input, cn } from '@nextui-org/react'
+import {
+  Checkbox,
+  Input,
+  Select,
+  cn,
+  type SelectProps,
+} from '@nextui-org/react'
 import {
   createContext,
   forwardRef,
@@ -128,6 +134,36 @@ const FormCheckBox = forwardRef<
   )
 })
 
+const FormSelect = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
+  const {
+    formDescriptionId,
+    formItemId,
+    formMessageId,
+    name,
+    isTouched,
+    error,
+  } = useFormField()
+  return (
+    <div ref={ref}>
+      <Select
+        id={formItemId}
+        aria-describedby={
+          !error
+            ? `${formDescriptionId}`
+            : `${formDescriptionId} ${formMessageId}`
+        }
+        aria-invalid={!!error}
+        errorMessage={error?.message}
+        isInvalid={error && isTouched}
+        name={name}
+        {...props}
+      >
+        {props.children}
+      </Select>
+    </div>
+  )
+})
+
 const useFormField = () => {
   const fieldCtx = useContext(FormFieldContext)
   const itemCtx = useContext(FormItemContext)
@@ -146,4 +182,12 @@ const useFormField = () => {
   }
 }
 
-export { Form, FormCheckBox, FormField, FormInput, FormItem, useFormField }
+export {
+  Form,
+  FormCheckBox,
+  FormField,
+  FormInput,
+  FormItem,
+  FormSelect,
+  useFormField,
+}
