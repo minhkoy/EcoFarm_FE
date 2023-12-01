@@ -30,4 +30,3 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
 }
 
 export default appWithTranslation(MyApp, i18Config)
-

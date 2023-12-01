@@ -15,6 +15,6 @@ const fontMono = FontMono({
   weight: ['400', '500', '700'],
 })
 
-const nextFonts = `${fontSans.variable} ${fontMono.variable} `
+export const nextFonts = `${fontSans.variable} ${fontMono.variable} `
 
-export default nextFonts
+export const fontSansStyle = fontSans.style

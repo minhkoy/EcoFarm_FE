@@ -1,7 +1,16 @@
-import { Form, FormField, FormInput, FormItem } from '@/components/ui/form'
+import {
+  Form,
+  FormField,
+  FormInput,
+  FormItem,
+  FormSelect,
+} from '@/components/ui/form'
+import { fontSansStyle } from '@/config/lib/fonts'
 import AuthLayout from '@/layouts/auth'
 import { type NextPageWithLayout } from '@/pages/_app'
+import { ACCOUNT_TYPE } from '@/utils/constants/enums'
 import { LINK_AUTH } from '@/utils/constants/links'
+import { SO_AccountType } from '@/utils/constants/selectOption'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
@@ -9,9 +18,10 @@ import {
   CardFooter,
   CardHeader,
   Link,
+  SelectItem,
   cn,
 } from '@nextui-org/react'
-import { capitalize } from 'lodash-es'
+import { capitalize, map } from 'lodash-es'
 import { useTranslation } from 'next-i18next'
 import config from 'next-i18next.config.mjs'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -21,13 +31,17 @@ import { z } from 'zod'
 export async function getServerSideProps({ locale }: { locale: string }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ['common', 'auth'], config)),
+      ...(await serverSideTranslations(
+        locale,
+        ['common', 'auth', 'select'],
+        config,
+      )),
     },
   }
 }
 
 const SignUpScreen: NextPageWithLayout = () => {
-  const { t } = useTranslation(['common', 'auth'])
+  const { t } = useTranslation(['common', 'auth', 'select'])
   // ==================== React Hook Form ====================
   const signUpSchema = z
     .object({
@@ -69,6 +83,11 @@ const SignUpScreen: NextPageWithLayout = () => {
             }),
           ),
         }),
+      accountType: z.nativeEnum(ACCOUNT_TYPE, {
+        required_error: capitalize(
+          t('auth:validation.account-type.isRequired'),
+        ),
+      }),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: capitalize(t('auth:validation.password.notMatch')),
@@ -169,6 +188,32 @@ const SignUpScreen: NextPageWithLayout = () => {
                     label={capitalize(t('auth:field.confirm-password'))}
                     onClear={() => field.onChange('')}
                   />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={rhf.control}
+              name='accountType'
+              render={({ field }) => (
+                <FormItem>
+                  <FormSelect
+                    {...field}
+                    label={capitalize(t('auth:field.account-type'))}
+                  >
+                    {map(SO_AccountType, (item) => (
+                      <SelectItem
+                        style={{
+                          ...fontSansStyle,
+                        }}
+                        key={item.value}
+                        value={item.value}
+                      >
+                        {t('select:account-type.' + item.label, {
+                          defaultValue: item.label,
+                        })}
+                      </SelectItem>
+                    ))}
+                  </FormSelect>
                 </FormItem>
               )}
             />

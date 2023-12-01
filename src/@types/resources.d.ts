@@ -1,7 +1,8 @@
 interface Resources {
   "auth": {
     "field": {
-      "confirm-password": "field.confirm-password",
+      "account-type": "loại tài khoản",
+      "confirm-password": "xác nhận mật khẩu",
       "forgot-password": "quên mật khẩu",
       "remember-me": "ghi nhớ đăng nhập",
       "your-email": "email của bạn",
@@ -11,13 +12,16 @@ interface Resources {
     "have-account": "đã có tài khoản",
     "not-have-account": "chưa có tài khoản",
     "validation": {
+      "account-type": {
+        "isRequired": "loại tài khoản không được để trống"
+      },
       "email": {
         "isRequired": "email không được để trống"
       },
       "password": {
         "max": "mật khẩu không được quá {{max}} ký tự",
         "min": "mật khẩu không được ít hơn {{min}} ký tự",
-        "notMatch": "validation.password.notMatch"
+        "notMatch": "nhập lại mật khẩu không khớp"
       },
       "username": {
         "isRequired": "tên đăng nhập không được để trống"
@@ -32,8 +36,15 @@ interface Resources {
     "now": "ngay",
     "or": "hoặc",
     "sign-up": "đăng ký",
-    "submit": "gửi",
     "username": "tài khoản"
+  },
+  "select": {
+    "account-type": {
+      "admin": "Quản trị hệ thống",
+      "customer": "Người dùng",
+      "seller": "Tổ chức/ cá nhân cung cấp dịch vụ",
+      "super-admin": "Quản trị viên cao cấp"
+    }
   }
 }
 
