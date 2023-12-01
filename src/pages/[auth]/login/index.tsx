@@ -74,7 +74,7 @@ const LoginScreen: NextPageWithLayout = () => {
 
   return (
     <>
-      <CardHeader className='flex h-1/3 flex-col items-center justify-center gap-5 sm:h-fit '>
+      <CardHeader className='flex h-1/3 flex-col items-center justify-between pt-5 sm:h-fit'>
         <h3 className='text-center text-3xl font-bold leading-8 text-secondary sm:leading-relaxed'>
           {cn(
             capitalize(t('common:experience')),
@@ -152,7 +152,7 @@ const LoginScreen: NextPageWithLayout = () => {
           </form>
         </Form>
       </CardBody>
-      <CardFooter className='flex-col gap-3'>
+      <CardFooter className='flex-col gap-5 pb-7'>
         <Button
           onClick={form.handleSubmit(onSubmit)}
           color='primary'
