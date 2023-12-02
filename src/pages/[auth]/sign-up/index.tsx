@@ -50,7 +50,10 @@ const SignUpScreen: NextPageWithLayout = () => {
       }),
       email: z
         .string()
-        .min(1, { message: capitalize(t('auth:validation.email.isRequired')) }),
+        .min(1, { message: capitalize(t('auth:validation.email.isRequired')) })
+        .email({
+          message: capitalize(t('auth:validation.email.isValid')),
+        }),
       password: z
         .string()
         .min(6, {
