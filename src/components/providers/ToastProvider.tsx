@@ -3,7 +3,7 @@ import { Toaster } from 'sonner'
 export default function ToastProvider() {
   return (
     <Toaster
-      duration={1000}
+      duration={5000}
       richColors
       position='bottom-right'
       theme='system'
