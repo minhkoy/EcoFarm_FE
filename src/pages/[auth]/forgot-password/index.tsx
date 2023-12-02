@@ -33,7 +33,7 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => {
 
 const ForgotPassScreen: NextPageWithLayout = () => {
   const router = useRouter()
-  const { t } = useTranslation(['auth', 'common'])
+  const { t } = useTranslation()
   const schema = z.object({
     email: z
       .string()

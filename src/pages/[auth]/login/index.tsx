@@ -1,3 +1,4 @@
+import { type User } from '@/@types'
 import {
   Form,
   FormCheckBox,
@@ -5,9 +6,11 @@ import {
   FormInput,
   FormItem,
 } from '@/components/ui/form'
-import { useLoginMutation } from '@/hooks/auth'
+import { loginApi } from '@/config/apis/authentication'
+import { createLoginSchema, type LoginSchemaType } from '@/config/schema'
 import AuthLayout from '@/layouts/auth'
 import { type NextPageWithLayout } from '@/pages/_app'
+import { ACCESS_TOKEN } from '@/utils/constants/enums'
 import { COMMON_LINK, LINK_AUTH } from '@/utils/constants/links'
 import { ToastHelper } from '@/utils/helpers/ToastHelper'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -19,69 +22,76 @@ import {
   Link,
   cn,
 } from '@nextui-org/react'
-import { capitalize, debounce } from 'lodash-es'
+import { useMutation } from '@tanstack/react-query'
+import { getCookie, setCookie } from 'cookies-next'
+import { capitalize } from 'lodash-es'
+import { type GetServerSidePropsContext } from 'next'
 import { useTranslation } from 'next-i18next'
 import config from 'next-i18next.config.mjs'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 
-export async function getServerSideProps({ locale }: { locale: string }) {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ['common', 'auth'], config)),
-    },
+export async function getServerSideProps({
+  locale,
+  req,
+  res,
+}: GetServerSidePropsContext) {
+  const hasCookie = getCookie(ACCESS_TOKEN, {
+    res,
+    req,
+  })
+  if (hasCookie) {
+    return {
+      redirect: {
+        destination: COMMON_LINK.DASHBOARD,
+        permanent: true,
+      },
+    }
   }
+  if (locale)
+    return {
+      props: {
+        ...(await serverSideTranslations(locale, ['common', 'auth'], config)),
+      },
+    }
 }
 
 const LoginScreen: NextPageWithLayout = () => {
-  const { t } = useTranslation(['common', 'auth'])
+  const { t } = useTranslation()
   const router = useRouter()
+  const schema = useMemo(() => createLoginSchema(t), [t])
   // ==================== React Hook Form ====================
-  const schema = z.object({
-    email: z.string().min(1, {
-      message: capitalize(t('auth:validation.email.isRequired')),
-    }),
-    password: z
-      .string()
-      .min(6, {
-        message: capitalize(
-          t('auth:validation.password.min', {
-            min: 6,
-          }),
-        ),
-      })
-      .max(20, {
-        message: capitalize(
-          t('auth:validation.password.max', {
-            max: 20,
-          }),
-        ),
-      }),
-    isRemember: z.boolean().optional().default(false),
-  })
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm<LoginSchemaType>({
     mode: 'all',
     resolver: zodResolver(schema),
     defaultValues: {
-      email: '',
+      usernameOrEmail: '',
       password: '',
       isRemember: false,
     },
   })
-  const { mutateAsync, isPending } = useLoginMutation()
-
-  async function onSubmit(values: z.infer<typeof schema>) {
-    await mutateAsync({
-      email: values.email,
-      password: values.password,
-    })
-    ToastHelper.success(t('common:success'), t('auth:login.success'), 500)
-    debounce(() => {
+  const { mutate, isPending } = useMutation({
+    mutationKey: ['auth', 'login'],
+    mutationFn: (params: User) =>
+      loginApi({
+        usernameOrEmail: params.usernameOrEmail,
+        password: params.password,
+      }),
+    onSuccess: (responseData) => {
+      ToastHelper.success(
+        capitalize(t('common:success')),
+        capitalize(t('auth:login.success')),
+      )
+      setCookie(ACCESS_TOKEN, responseData?.data.value.accessToken)
       void router.replace(COMMON_LINK.DASHBOARD)
-    }, 1000)
+    },
+  })
+
+  const onSubmit = (data: LoginSchemaType) => {
+    mutate(data)
   }
 
   return (
@@ -108,7 +118,7 @@ const LoginScreen: NextPageWithLayout = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
             <FormField
               control={form.control}
-              name='email'
+              name='usernameOrEmail'
               render={({ field }) => (
                 <FormItem>
                   <FormInput

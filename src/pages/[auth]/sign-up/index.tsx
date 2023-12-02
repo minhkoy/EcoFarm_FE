@@ -6,9 +6,9 @@ import {
   FormSelect,
 } from '@/components/ui/form'
 import { fontSansStyle } from '@/config/lib/fonts'
+import { createSignUpSchema, type SignUpSchemaType } from '@/config/schema'
 import AuthLayout from '@/layouts/auth'
 import { type NextPageWithLayout } from '@/pages/_app'
-import { ACCOUNT_TYPE } from '@/utils/constants/enums'
 import { LINK_AUTH } from '@/utils/constants/links'
 import { SO_AccountType } from '@/utils/constants/selectOption'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -26,8 +26,9 @@ import { useTranslation } from 'next-i18next'
 import config from 'next-i18next.config.mjs'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Image from 'next/image'
+import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+
 export async function getServerSideProps({ locale }: { locale: string }) {
   return {
     props: {
@@ -41,63 +42,11 @@ export async function getServerSideProps({ locale }: { locale: string }) {
 }
 
 const SignUpScreen: NextPageWithLayout = () => {
-  const { t } = useTranslation(['common', 'auth', 'select'])
+  const { t } = useTranslation()
+  const schema = useMemo(() => createSignUpSchema(t), [t])
   // ==================== React Hook Form ====================
-  const signUpSchema = z
-    .object({
-      username: z.string().min(1, {
-        message: capitalize(t('auth:validation.username.isRequired')),
-      }),
-      email: z
-        .string()
-        .min(1, { message: capitalize(t('auth:validation.email.isRequired')) })
-        .email({
-          message: capitalize(t('auth:validation.email.isValid')),
-        }),
-      password: z
-        .string()
-        .min(6, {
-          message: capitalize(
-            t('auth:validation.password.min', {
-              min: 6,
-            }),
-          ),
-        })
-        .max(20, {
-          message: capitalize(
-            t('auth:validation.password.max', {
-              max: 20,
-            }),
-          ),
-        }),
-      confirmPassword: z
-        .string()
-        .min(6, {
-          message: capitalize(
-            t('auth:validation.password.min', {
-              min: 6,
-            }),
-          ),
-        })
-        .max(20, {
-          message: capitalize(
-            t('auth:validation.password.max', {
-              max: 20,
-            }),
-          ),
-        }),
-      accountType: z.nativeEnum(ACCOUNT_TYPE, {
-        required_error: capitalize(
-          t('auth:validation.account-type.isRequired'),
-        ),
-      }),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: capitalize(t('auth:validation.password.notMatch')),
-      path: ['confirmPassword'],
-    })
-  const rhf = useForm<z.infer<typeof signUpSchema>>({
-    resolver: zodResolver(signUpSchema),
+  const rhf = useForm<SignUpSchemaType>({
+    resolver: zodResolver(schema),
     mode: 'all',
     defaultValues: {
       email: '',
@@ -107,7 +56,7 @@ const SignUpScreen: NextPageWithLayout = () => {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof signUpSchema>) => {
+  const onSubmit = (values: SignUpSchemaType) => {
     console.log(values)
   }
 

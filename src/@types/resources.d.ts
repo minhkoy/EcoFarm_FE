@@ -30,6 +30,9 @@ interface Resources {
       },
       "username": {
         "isRequired": "tên đăng nhập không được để trống"
+      },
+      "usernameOrEmail": {
+        "isRequired": "tên đăng nhập hoặc email không được để trống"
       }
     }
   },
@@ -42,21 +45,21 @@ interface Resources {
     "or": "hoặc",
     "reset-password": "Thay đổi mật khẩu",
     "sign-up": "đăng ký",
-    "success": "success",
+    "success": "thành công",
     "username": "tài khoản"
   },
   "error": {
     "access-denied": {
-      "description": "access-denied.description",
-      "title": "access-denied.title"
+      "description": "Xin lỗi, bạn Không có quyền truy cập",
+      "title": "Truy cập bị từ chối"
     },
     "access-expired": {
-      "description": "access-expired.description",
-      "title": "access-expired.title"
+      "description": "Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại.",
+      "title": "Đăng nhập hết hạn"
     },
     "default-error": {
-      "description": "default-error.description",
-      "title": "default-error.title"
+      "description": "Đã xảy ra lỗi. Vui lòng thử lại sau.",
+      "title": "Lỗi"
     }
   },
   "select": {
