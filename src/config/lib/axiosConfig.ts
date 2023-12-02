@@ -10,13 +10,15 @@ const axiosClient = axios.create({
   baseURL: env.NEXT_PUBLIC_API_URL,
   headers: {
     Accept: 'application/json',
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json; charset=utf-8',
   },
   paramsSerializer: (params) => queryString.stringify(params),
 })
 
 axiosClient.interceptors.request.use(async (config) => {
-  config.headers.Authorization = `Bearer ${getCookie(ACCESS_TOKEN)}`
+  if (getCookie(ACCESS_TOKEN)) {
+    config.headers.Authorization = `Bearer ${getCookie(ACCESS_TOKEN)}`
+  }
   // Log the request method and URL
   console.log(`Request: ${config.method?.toUpperCase()} ${config.url}`)
 

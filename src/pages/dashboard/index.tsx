@@ -4,8 +4,11 @@ import { LINK_AUTH } from '@/utils/constants/links'
 import { getCookie } from 'cookies-next'
 import { type GetServerSideProps } from 'next'
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const hasToken = getCookie(ACCESS_TOKEN)
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const hasToken = getCookie(ACCESS_TOKEN, {
+    req,
+    res,
+  })
   if (!hasToken) {
     return {
       redirect: {
