@@ -1,6 +1,6 @@
 interface Resources {
   "auth": {
-    "back-to-login": "back-to-login",
+    "back-to-login": "quay lại trang đăng nhập",
     "field": {
       "account-type": "loại tài khoản",
       "confirm-password": "xác nhận mật khẩu",
@@ -11,6 +11,9 @@ interface Resources {
       "your-username": "tên đăng nhập của bạn"
     },
     "have-account": "đã có tài khoản",
+    "login": {
+      "success": "đăng nhập thành công"
+    },
     "not-have-account": "chưa có tài khoản",
     "validation": {
       "account-type": {
@@ -39,7 +42,22 @@ interface Resources {
     "or": "hoặc",
     "reset-password": "Thay đổi mật khẩu",
     "sign-up": "đăng ký",
+    "success": "success",
     "username": "tài khoản"
+  },
+  "error": {
+    "access-denied": {
+      "description": "access-denied.description",
+      "title": "access-denied.title"
+    },
+    "access-expired": {
+      "description": "access-expired.description",
+      "title": "access-expired.title"
+    },
+    "default-error": {
+      "description": "default-error.description",
+      "title": "default-error.title"
+    }
   },
   "select": {
     "account-type": {

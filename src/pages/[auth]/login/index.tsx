@@ -5,9 +5,11 @@ import {
   FormInput,
   FormItem,
 } from '@/components/ui/form'
+import { useLoginMutation } from '@/hooks/auth'
 import AuthLayout from '@/layouts/auth'
 import { type NextPageWithLayout } from '@/pages/_app'
-import { LINK_AUTH } from '@/utils/constants/links'
+import { COMMON_LINK, LINK_AUTH } from '@/utils/constants/links'
+import { ToastHelper } from '@/utils/helpers/ToastHelper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
@@ -17,11 +19,12 @@ import {
   Link,
   cn,
 } from '@nextui-org/react'
-import { capitalize } from 'lodash-es'
+import { capitalize, debounce } from 'lodash-es'
 import { useTranslation } from 'next-i18next'
 import config from 'next-i18next.config.mjs'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -35,6 +38,7 @@ export async function getServerSideProps({ locale }: { locale: string }) {
 
 const LoginScreen: NextPageWithLayout = () => {
   const { t } = useTranslation(['common', 'auth'])
+  const router = useRouter()
   // ==================== React Hook Form ====================
   const schema = z.object({
     email: z.string().min(1, {
@@ -67,9 +71,17 @@ const LoginScreen: NextPageWithLayout = () => {
       isRemember: false,
     },
   })
+  const { mutateAsync, isPending } = useLoginMutation()
 
-  function onSubmit(values: z.infer<typeof schema>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof schema>) {
+    await mutateAsync({
+      email: values.email,
+      password: values.password,
+    })
+    ToastHelper.success(t('common:success'), t('auth:login.success'), 500)
+    debounce(() => {
+      void router.replace(COMMON_LINK.DASHBOARD)
+    }, 1000)
   }
 
   return (
@@ -159,6 +171,8 @@ const LoginScreen: NextPageWithLayout = () => {
           variant='solid'
           fullWidth
           className='font-bold'
+          isLoading={isPending}
+          disabled={isPending}
         >
           {capitalize(t('common:login'))}
         </Button>
