@@ -1,5 +1,6 @@
 interface Resources {
   "auth": {
+    "back-to-login": "back-to-login",
     "field": {
       "account-type": "loại tài khoản",
       "confirm-password": "xác nhận mật khẩu",
@@ -16,7 +17,8 @@ interface Resources {
         "isRequired": "loại tài khoản không được để trống"
       },
       "email": {
-        "isRequired": "email không được để trống"
+        "isRequired": "email không được để trống",
+        "isValid": "định dạng email không hợp lệ"
       },
       "password": {
         "max": "mật khẩu không được quá {{max}} ký tự",
@@ -35,6 +37,7 @@ interface Resources {
     "login": "đăng nhập",
     "now": "ngay",
     "or": "hoặc",
+    "reset-password": "Thay đổi mật khẩu",
     "sign-up": "đăng ký",
     "username": "tài khoản"
   },
