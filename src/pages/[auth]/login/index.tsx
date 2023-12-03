@@ -1,4 +1,3 @@
-import { type User } from '@/@types'
 import {
   Form,
   FormCheckBox,
@@ -75,11 +74,7 @@ const LoginScreen: NextPageWithLayout = () => {
   })
   const { mutate, isPending } = useMutation({
     mutationKey: ['auth', 'login'],
-    mutationFn: (params: User) =>
-      loginApi({
-        usernameOrEmail: params.usernameOrEmail,
-        password: params.password,
-      }),
+    mutationFn: (params: LoginSchemaType) => loginApi(params),
     onSuccess: (responseData) => {
       ToastHelper.success(
         capitalize(t('common:success')),

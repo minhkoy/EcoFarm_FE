@@ -18,6 +18,7 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(async (config) => {
   if (getCookie(ACCESS_TOKEN)) {
     config.headers.Authorization = `Bearer ${getCookie(ACCESS_TOKEN)}`
+    config.headers['Accept-Language'] = i18n?.languages
   }
   // Log the request method and URL
   console.log(`Request: ${config.method?.toUpperCase()} ${config.url}`)
