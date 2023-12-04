@@ -3,6 +3,7 @@ import { capitalize } from 'lodash-es'
 import { type TFunction } from 'next-i18next'
 import { z } from 'zod'
 
+
 export const createCommonSchema = <T extends TFunction>(t: T) => {
   const passwordSchema = z
     .string()
@@ -52,6 +53,7 @@ export const createSignUpSchema = <T extends TFunction>(t: T) => {
       email: createCommonSchema(t).emailSchema,
       password: createCommonSchema(t).passwordSchema,
       confirmPassword: createCommonSchema(t).passwordSchema,
+
       accountType: z.nativeEnum(ACCOUNT_TYPE, {
         required_error: capitalize(
           t('auth:validation.account-type.isRequired'),
