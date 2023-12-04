@@ -13,3 +13,10 @@ export const ERROR_CODES = {
   NOT_FOUND: 404,
   INTERNAL_SERVER_ERROR: 500,
 }
+
+export const GENDER = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE',
+  OTHERS: 'OTHERS',
+} as const
+
